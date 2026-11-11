@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Для Кати • 8 месяцев вместе ✨</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome icons CDN -->
@@ -10,7 +11,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Marcellus&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -27,7 +28,6 @@
                     },
                     fontFamily: {
                         serif: ['Marcellus', 'serif'],
-                        hand: ['Caveat', 'cursive'],
                         sans: ['Montserrat', 'sans-serif']
                     }
                 }
@@ -75,40 +75,24 @@
             touch-action: manipulation;
         }
 
-        .hotspot.quest-complete::before {
-            content: "";
-            position: absolute;
-            inset: -5px;
-            border: 2px solid rgba(255, 220, 125, 0.9);
-            border-radius: 999px;
-            box-shadow: 0 0 12px 4px rgba(255, 205, 85, 0.55),
-                        inset 0 0 10px rgba(255, 220, 125, 0.25);
-            animation: completedGlow 2s ease-in-out infinite;
-            pointer-events: none;
-        }
-
         .hotspot.quest-complete::after {
             content: "✓";
             position: absolute;
             top: -9px;
             right: -9px;
-            width: 19px;
-            height: 19px;
+            width: 22px;
+            height: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
             color: #182033;
             background: linear-gradient(135deg, #fff1ad, #f6c85f);
-            border: 1px solid rgba(255,255,255,.8);
+            border: 1.5px solid rgba(255,255,255,.9);
             box-shadow: 0 0 12px rgba(255, 210, 100, .9);
-            font: 700 12px/1 Montserrat, sans-serif;
+            font: 700 13px/1 Montserrat, sans-serif;
             pointer-events: none;
-        }
-
-        @keyframes completedGlow {
-            0%, 100% { opacity: .65; transform: scale(.96); }
-            50% { opacity: 1; transform: scale(1.06); }
+            z-index: 30;
         }
 
         .hotspot-tooltip {
@@ -376,7 +360,7 @@
         </div>
     </div>
 
-    <!-- FINAL LOVE LETTER MODAL -->
+    <!-- FINAL LOVE LETTER MODAL (С обычной гарнитурой) -->
     <div id="modal-letter" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-lg hidden transition-all duration-500">
         <div class="glass-modal w-full max-w-md rounded-3xl p-6 sm:p-8 text-left relative border-2 border-amber-300/70 shadow-2xl max-h-[88vh] overflow-y-auto">
             <button onclick="closeLoveLetter()" class="absolute top-4 right-4 text-amber-200/60 hover:text-white w-8 h-8 flex items-center justify-center rounded-full glass-panel">
@@ -385,10 +369,10 @@
             <div class="text-center mb-6">
                 <span class="text-4xl">👑🌹</span>
                 <h2 class="font-serif text-2xl text-amber-200 font-bold mt-2">Котенок, с 8 месяцами нас!</h2>
-                <p class="text-xs text-amber-300/80 font-serif">11 марта • Наша Вселенная</p>
+                <p class="text-xs text-amber-300/80 font-sans tracking-wide">11 марта • Наша Вселенная</p>
             </div>
-            <div class="space-y-4 font-hand text-lg sm:text-xl text-amber-100 leading-relaxed border-t border-b border-amber-300/20 py-4">
-                <p>Любимая моя девочка!</p>
+            <div class="space-y-4 font-sans text-sm sm:text-base text-amber-100/90 leading-relaxed border-t border-b border-amber-300/20 py-5">
+                <p class="font-medium text-amber-200">Любимая моя девочка!</p>
                 <p>
                     Сегодня ровно 8 месяцев, как мы вместе. В произведении «Маленький Принц» есть слова: <i>«Если ты любишь цветок, который растет где-то на далекой звезде, хорошо ночью смотреть на небо. Все звезды расцветают...»</i>
                 </p>
@@ -398,7 +382,7 @@
                 <p>
                     Спасибо тебе за твою нежность, тепло и любовь. Я обещаю беречь наше чувство так же заботливо, как Принц берег свою розу под стеклянным куполом.
                 </p>
-                <p class="text-right text-amber-300 font-bold pt-2">
+                <p class="text-right text-amber-300 font-semibold pt-2">
                     Я тебя очень сильно люблю! ❤️
                 </p>
             </div>
@@ -500,9 +484,21 @@
             ctx.restore();
         }
 
+        // Чистая Луна без антены/розы
         function drawCrateredMoon(x, y, radius) {
             ctx.save();
             let isGlowing = questsCompleted.star || activeHoverObj === 'star';
+
+            // Контурное свечение для Луны
+            if (isGlowing) {
+                ctx.shadowColor = '#ffd166';
+                ctx.shadowBlur = 24;
+                ctx.strokeStyle = 'rgba(255, 220, 120, 0.9)';
+                ctx.lineWidth = 4;
+            } else {
+                ctx.strokeStyle = '#6b5832';
+                ctx.lineWidth = 1.5;
+            }
 
             let moonGrad = ctx.createRadialGradient(x - radius * 0.3, y - radius * 0.3, radius * 0.2, x, y, radius);
             moonGrad.addColorStop(0, '#f9e7b2');
@@ -512,13 +508,10 @@
             ctx.beginPath();
             ctx.arc(x, y, radius, 0, Math.PI * 2);
             ctx.fillStyle = moonGrad;
-            ctx.shadowColor = isGlowing ? '#ffd166' : 'rgba(249, 231, 178, 0.4)';
-            ctx.shadowBlur = isGlowing ? 30 : 12;
             ctx.fill();
-            ctx.strokeStyle = '#6b5832';
-            ctx.lineWidth = 1.5;
             ctx.stroke();
 
+            // Кратеры
             const craters = [
                 { cx: x - radius * 0.3, cy: y - radius * 0.2, r: radius * 0.22 },
                 { cx: x + radius * 0.2, cy: y + radius * 0.3, r: radius * 0.18 },
@@ -530,18 +523,6 @@
                 ctx.fillStyle = 'rgba(125, 105, 60, 0.35)';
                 ctx.fill();
             });
-
-            ctx.beginPath();
-            ctx.moveTo(x + radius * 0.1, y - radius * 0.95);
-            ctx.lineTo(x + radius * 0.15, y - radius * 1.35);
-            ctx.strokeStyle = '#2d6a4f';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.arc(x + radius * 0.15, y - radius * 1.4, 4, 0, Math.PI * 2);
-            ctx.fillStyle = '#d62828';
-            ctx.fill();
 
             ctx.restore();
         }
@@ -567,6 +548,7 @@
             ctx.restore();
         }
 
+        // Отрисовка персонажей с подстветкой строго по их краю
         function drawMainPlanetAndCharacters() {
             const planetR = Math.min(width, height) * 0.65;
             const planetX = width / 2;
@@ -602,93 +584,147 @@
 
             const topY = -planetR;
 
-            // 1. Fox
+            // 1. Лисица (Fox)
             ctx.save();
             ctx.translate(-28, topY + 4);
             let isFoxGlowing = questsCompleted.fox || activeHoverObj === 'fox';
+            
+            // Задаем точечное свечение контуров
             if (isFoxGlowing) {
-                ctx.shadowColor = '#e85d04';
-                ctx.shadowBlur = 20;
+                ctx.shadowColor = '#ff8800';
+                ctx.shadowBlur = 18;
+                ctx.strokeStyle = 'rgba(255, 180, 80, 0.95)';
+                ctx.lineWidth = 2.5;
+            } else {
+                ctx.strokeStyle = 'transparent';
+                ctx.lineWidth = 0;
             }
+
+            // Туловище
             ctx.beginPath();
             ctx.ellipse(0, -14, 11, 16, -0.1, 0, Math.PI * 2);
             ctx.fillStyle = '#e85d04';
             ctx.fill();
+            if (isFoxGlowing) ctx.stroke();
+
+            // Голова
             ctx.beginPath();
             ctx.arc(0, -30, 9, 0, Math.PI * 2);
             ctx.fillStyle = '#dc2f02';
             ctx.fill();
+            if (isFoxGlowing) ctx.stroke();
+
+            // Ушки
             ctx.beginPath();
             ctx.moveTo(-7, -34); ctx.lineTo(-11, -44); ctx.lineTo(-2, -37);
             ctx.moveTo(2, -37); ctx.lineTo(7, -44); ctx.lineTo(8, -34);
             ctx.fillStyle = '#dc2f02';
             ctx.fill();
+            if (isFoxGlowing) ctx.stroke();
+
+            // Хвост
             ctx.beginPath();
             ctx.quadraticCurveTo(-25, 0, -22, -22);
             ctx.quadraticCurveTo(-15, -15, -9, -5);
             ctx.fillStyle = '#e85d04';
             ctx.fill();
+            if (isFoxGlowing) ctx.stroke();
+
             ctx.beginPath();
             ctx.arc(-22, -20, 5, 0, Math.PI * 2);
             ctx.fillStyle = '#fff';
             ctx.fill();
             ctx.restore();
 
-            // 2. Little Prince
+            // 2. Маленький Принц
             ctx.save();
             ctx.translate(10, topY + 6);
             let isPrinceGlowing = questsCompleted.prince || activeHoverObj === 'prince';
+            
             if (isPrinceGlowing) {
-                ctx.shadowColor = '#ffd166';
-                ctx.shadowBlur = 25;
+                ctx.shadowColor = '#ffe066';
+                ctx.shadowBlur = 20;
+                ctx.strokeStyle = 'rgba(255, 235, 130, 0.95)';
+                ctx.lineWidth = 2.5;
+            } else {
+                ctx.strokeStyle = 'transparent';
+                ctx.lineWidth = 0;
             }
+
+            // Накидка
             ctx.beginPath();
             ctx.ellipse(0, -18, 14, 20, 0, 0, Math.PI * 2);
             ctx.fillStyle = '#2d6a4f';
             ctx.fill();
+            if (isPrinceGlowing) ctx.stroke();
+
+            // Пояс
             ctx.fillStyle = '#b5838d';
             ctx.fillRect(-12, -15, 24, 4);
+
+            // Голова
             ctx.beginPath();
             ctx.arc(0, -42, 13, 0, Math.PI * 2);
             ctx.fillStyle = '#ffb703';
             ctx.fill();
+            if (isPrinceGlowing) ctx.stroke();
+
+            // Волосы
             ctx.beginPath();
             ctx.arc(-5, -52, 6, 0, Math.PI * 2);
             ctx.arc(4, -54, 7, 0, Math.PI * 2);
             ctx.arc(10, -48, 5, 0, Math.PI * 2);
             ctx.fillStyle = '#ffc300';
             ctx.fill();
+            if (isPrinceGlowing) ctx.stroke();
+
+            // Шарф
             ctx.beginPath();
             ctx.moveTo(8, -38);
             ctx.quadraticCurveTo(40, -42, 65, -30);
             ctx.quadraticCurveTo(45, -28, 10, -32);
             ctx.fillStyle = '#ffd166';
             ctx.fill();
+            if (isPrinceGlowing) ctx.stroke();
             ctx.restore();
 
-            // 3. Rose
+            // 3. Алая Роза
             ctx.save();
             ctx.translate(65, topY + 4);
             let isRoseGlowing = questsCompleted.rose || activeHoverObj === 'rose';
+
             if (isRoseGlowing) {
                 ctx.shadowColor = '#ff4d6d';
-                ctx.shadowBlur = 25;
+                ctx.shadowBlur = 20;
+                ctx.strokeStyle = 'rgba(255, 140, 170, 0.95)';
             }
+
+            // Стебель
             ctx.beginPath();
             ctx.moveTo(0, 0);
             ctx.quadraticCurveTo(5, -20, 2, -35);
-            ctx.strokeStyle = '#40916c';
-            ctx.lineWidth = 3;
+            ctx.strokeStyle = isRoseGlowing ? '#ff85a1' : '#40916c';
+            ctx.lineWidth = isRoseGlowing ? 3.5 : 3;
             ctx.stroke();
+
+            // Листочки
             ctx.beginPath();
             ctx.ellipse(-6, -18, 7, 3, -0.4, 0, Math.PI * 2);
             ctx.ellipse(8, -24, 7, 3, 0.4, 0, Math.PI * 2);
             ctx.fillStyle = '#52b788';
             ctx.fill();
+
+            // Бутон Розы
             ctx.beginPath();
             ctx.arc(2, -42, 10, 0, Math.PI * 2);
             ctx.fillStyle = '#d62828';
             ctx.fill();
+            if (isRoseGlowing) {
+                ctx.strokeStyle = '#ff9ebb';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+
             ctx.beginPath();
             ctx.arc(0, -44, 6, 0, Math.PI * 2);
             ctx.fillStyle = '#e63946';
