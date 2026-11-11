@@ -71,12 +71,10 @@
             border: 1.5px solid rgba(249, 215, 92, 0.35);
         }
 
-        /* Tooltip styling */
         .hotspot {
             touch-action: manipulation;
         }
 
-        /* A completed quest gets a soft halo and a small check mark. */
         .hotspot.quest-complete::before {
             content: "";
             position: absolute;
@@ -113,10 +111,6 @@
             50% { opacity: 1; transform: scale(1.06); }
         }
 
-        @media (prefers-reduced-motion: reduce) {
-            .hotspot.quest-complete::before { animation: none; }
-        }
-
         .hotspot-tooltip {
             position: absolute;
             transform: translate(-50%, -100%);
@@ -145,22 +139,6 @@
         ::-webkit-scrollbar-track { background: rgba(12, 20, 45, 0.6); }
         ::-webkit-scrollbar-thumb { background: rgba(249, 215, 92, 0.5); border-radius: 10px; }
 
-        .sparkle {
-            position: absolute;
-            pointer-events: none;
-            background: radial-gradient(circle, #fff 20%, rgba(249, 215, 92, 0.9) 60%, transparent 80%);
-            border-radius: 50%;
-            animation: starBurst 1.2s forwards;
-        }
-
-        @keyframes starBurst {
-            0% { transform: scale(0.4); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: scale(1.2); opacity: 0; }
-        }
-
-
-        /* Mobile layout improvements */
         html {
             min-height: 100%;
             height: 100%;
@@ -201,7 +179,6 @@
                 backdrop-filter: blur(12px);
             }
 
-            /* Keep quest dialogs fully visible and scrollable on short phones. */
             [id^="modal-"] {
                 align-items: center;
                 padding: max(12px, env(safe-area-inset-top))
@@ -221,7 +198,6 @@
                 border-radius: 22px;
             }
 
-            /* Reduce oversized quest illustrations without changing gameplay. */
             [id^="modal-"] .text-5xl {
                 font-size: 2.5rem;
                 line-height: 1.1;
@@ -244,78 +220,33 @@
                 max-width: min(88vw, 340px);
             }
 
-            /* Avoid hover-only labels sticking over the scene on touch devices. */
             .hotspot-tooltip {
                 white-space: normal;
                 max-width: 120px;
                 text-align: center;
             }
         }
-
-        @media (max-width: 380px) {
-            [id^="modal-"] > .glass-modal {
-                padding: 14px;
-                border-radius: 18px;
-            }
-
-            [id^="modal-"] h3 {
-                font-size: 1.15rem;
-            }
-
-            [id^="modal-"] p {
-                line-height: 1.45;
-            }
-
-            #audioBtn {
-                width: 44px;
-                height: 44px;
-            }
-        }
-
-        @media (orientation: landscape) and (max-height: 500px) {
-            [id^="modal-"] {
-                align-items: flex-start;
-            }
-
-            [id^="modal-"] > .glass-modal {
-                margin: 8px auto;
-                max-height: calc(100dvh - 16px);
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                scroll-behavior: auto !important;
-            }
-        }
-
     </style>
 </head>
 <body class="font-sans text-amber-50 min-h-screen select-none overflow-hidden relative">
 
-    <!-- Interactive Canvas Background -->
     <canvas id="spaceCanvas"></canvas>
-
-    <!-- Put the licensed MP3 file named ty-leti.mp3 next to this HTML file. -->
     <audio id="customSong" src="ty-leti.mp3" preload="none" loop></audio>
 
-    <!-- Floating Audio Button (Bottom-Right Corner) -->
+    <!-- Floating Audio Button -->
     <button id="audioBtn" onclick="toggleAudio()" class="fixed bottom-4 right-4 z-40 glass-panel w-12 h-12 rounded-full flex items-center justify-center text-amber-300 hover:text-white transition duration-300 active:scale-95 shadow-xl border border-amber-300/40 pointer-events-auto">
         <i id="audioIcon" class="fa-solid fa-music text-base"></i>
     </button>
 
-    <!-- UI Overlay for Progress & Sound Control -->
+    <!-- UI Overlay for Progress & Letter Container -->
     <div class="relative z-10 flex flex-col justify-between min-h-screen w-full max-w-lg mx-auto px-4 py-5 pointer-events-none">
         
-        <!-- Spacer for clean top space -->
         <div class="h-4"></div>
 
         <!-- Top Centered Hint Box -->
         <div id="introHint" class="text-center pointer-events-auto transition-all duration-700 my-auto">
             <div class="inline-block glass-panel px-4 py-2 rounded-2xl border border-amber-300/30 shadow-xl max-w-xs">
                 <p class="font-serif text-sm text-amber-200 font-semibold mb-0.5">Коснись персонажей</p>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -332,38 +263,23 @@
             </div>
         </div>
 
-        <!-- Invisible Hotspots Overlay over Canvas Elements -->
-        <div id="hotspotsContainer" class="fixed inset-0 pointer-events-none z-20">
-            <!-- 1. Moon Hotspot (Top Left) -->
-            <div id="hotspot-star" onclick="openQuest('star')" class="hotspot absolute pointer-events-auto cursor-pointer rounded-full -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                <div class="hotspot-tooltip glass-panel px-3 py-1 rounded-full text-xs text-amber-200 shadow-lg">
-                    🌕
-                </div>
-            </div>
-
-            <!-- 2. Fox Hotspot (Bottom Left of Asteroid) -->
-            <div id="hotspot-fox" onclick="openQuest('fox')" class="hotspot absolute pointer-events-auto cursor-pointer rounded-full -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                <div class="hotspot-tooltip glass-panel px-3 py-1 rounded-full text-xs text-amber-300 shadow-lg">
-                    🦊
-                </div>
-            </div>
-
-            <!-- 3. Little Prince Hotspot (Center of Asteroid) -->
-            <div id="hotspot-prince" onclick="openQuest('prince')" class="hotspot absolute pointer-events-auto cursor-pointer rounded-full -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                <div class="hotspot-tooltip glass-panel px-3 py-1 rounded-full text-xs text-amber-200 shadow-lg">
-                    👑
-                </div>
-            </div>
-
-            <!-- 4. Rose Hotspot (Right of Asteroid) -->
-            <div id="hotspot-rose" onclick="openQuest('rose')" class="hotspot absolute pointer-events-auto cursor-pointer rounded-full -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                <div class="hotspot-tooltip glass-panel px-3 py-1 rounded-full text-xs text-rose-300 shadow-lg">
-                    🌹
-                </div>
-            </div>
-        </div>
-
         <div class="h-4"></div>
+    </div>
+
+    <!-- Invisible Hotspots Overlay -->
+    <div id="hotspotsContainer" class="fixed inset-0 pointer-events-none z-20">
+        <div id="hotspot-star" onclick="openQuest('star')" class="hotspot absolute pointer-events-auto cursor-pointer rounded-full -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+            <div class="hotspot-tooltip glass-panel px-3 py-1 rounded-full text-xs text-amber-200 shadow-lg">🌕</div>
+        </div>
+        <div id="hotspot-fox" onclick="openQuest('fox')" class="hotspot absolute pointer-events-auto cursor-pointer rounded-full -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+            <div class="hotspot-tooltip glass-panel px-3 py-1 rounded-full text-xs text-amber-300 shadow-lg">🦊</div>
+        </div>
+        <div id="hotspot-prince" onclick="openQuest('prince')" class="hotspot absolute pointer-events-auto cursor-pointer rounded-full -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+            <div class="hotspot-tooltip glass-panel px-3 py-1 rounded-full text-xs text-amber-200 shadow-lg">👑</div>
+        </div>
+        <div id="hotspot-rose" onclick="openQuest('rose')" class="hotspot absolute pointer-events-auto cursor-pointer rounded-full -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+            <div class="hotspot-tooltip glass-panel px-3 py-1 rounded-full text-xs text-rose-300 shadow-lg">🌹</div>
+        </div>
     </div>
 
     <!-- MODAL 1: ROSE QUEST -->
@@ -377,17 +293,14 @@
             <p class="text-xs text-sky-100/80 mb-4 font-light">
                 Космический ветер пытается тревожить рощу! Нажми 5 раз на прозрачный купол, чтобы укрыть розу.
             </p>
-
             <div class="relative w-36 h-36 mx-auto my-4 flex items-center justify-center">
                 <div id="roseDome" onclick="shieldRose()" class="w-32 h-32 rounded-full border-2 border-dashed border-rose-400/50 flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 bg-rose-500/10">
                     <span class="text-5xl select-none">🥀</span>
                 </div>
             </div>
-
             <div class="w-full bg-slate-800/80 rounded-full h-2.5 mb-4 overflow-hidden border border-amber-300/20">
                 <div id="roseProgress" class="bg-gradient-to-r from-rose-400 to-amber-300 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
             </div>
-
             <p id="roseStatus" class="text-xs text-amber-200 font-medium">Коснись купола, чтобы укрыть розу (0/5)</p>
         </div>
     </div>
@@ -401,19 +314,16 @@
             <div class="text-4xl mb-2">👑</div>
             <h3 class="font-serif text-xl text-amber-200 font-bold mb-1">Собери Звезды Желаний</h3>
             <p class="text-xs text-sky-100/80 mb-4 font-light">
-                Поймай 5 падающих звёзд, для Маленького Принца .
+                Поймай 5 падающих звёзд, для Маленького Принца.
             </p>
-
             <div id="starCatchArea" class="relative w-full h-44 bg-slate-900/60 rounded-2xl overflow-hidden border border-amber-300/20 my-3">
                 <div class="absolute inset-0 flex items-center justify-center text-xs text-amber-200/40 font-light pointer-events-none">
                     Нажимай на появляющиеся звезды!
                 </div>
             </div>
-
             <div class="w-full bg-slate-800/80 rounded-full h-2.5 mb-3 overflow-hidden border border-amber-300/20">
                 <div id="princeProgress" class="bg-gradient-to-r from-amber-400 to-amber-200 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
             </div>
-
             <p id="princeStatus" class="text-xs text-amber-200 font-medium">Собрано звёзд: 0/5</p>
         </div>
     </div>
@@ -429,11 +339,9 @@
             <p class="text-xs text-sky-100/80 mb-4 font-light">
                 «Ты для меня единственная в целом свете». Нажимай на точки по порядку (1➔2➔3➔4➔5).
             </p>
-
             <div id="constellationArea" class="relative w-full h-44 bg-slate-900/60 rounded-2xl border border-amber-300/20 my-3 overflow-hidden">
                 <svg id="constellationSvg" class="absolute inset-0 w-full h-full pointer-events-none"></svg>
             </div>
-
             <p id="foxStatus" class="text-xs text-amber-200 font-medium">Начни с точки 1</p>
         </div>
     </div>
@@ -449,13 +357,11 @@
             <p class="text-xs text-sky-100/80 mb-4 font-light">
                 Ответь на главную истину Маленького Принца:
             </p>
-
             <div class="bg-slate-900/70 p-4 rounded-2xl border border-amber-300/20 mb-4">
                 <p class="text-sm font-serif text-amber-100 italic">
                     «Зорко одно лишь сердце. Самого главного...»
                 </p>
             </div>
-
             <div class="space-y-2 text-left">
                 <button onclick="answerStar(false)" class="w-full glass-panel py-3 px-4 rounded-xl text-xs text-sky-100 hover:border-amber-300 transition duration-300">
                     А) ...нельзя выучить в школе
@@ -476,15 +382,13 @@
             <button onclick="closeLoveLetter()" class="absolute top-4 right-4 text-amber-200/60 hover:text-white w-8 h-8 flex items-center justify-center rounded-full glass-panel">
                 <i class="fa-solid fa-xmark"></i>
             </button>
-
             <div class="text-center mb-6">
                 <span class="text-4xl">👑🌹</span>
                 <h2 class="font-serif text-2xl text-amber-200 font-bold mt-2">Котенок, с 8 месяцами нас!</h2>
                 <p class="text-xs text-amber-300/80 font-serif">11 марта • Наша Вселенная</p>
             </div>
-
             <div class="space-y-4 font-hand text-lg sm:text-xl text-amber-100 leading-relaxed border-t border-b border-amber-300/20 py-4">
-                <p>Любимая моя девока!</p>
+                <p>Любимая моя девочка!</p>
                 <p>
                     Сегодня ровно 8 месяцев, как мы вместе. В произведении «Маленький Принц» есть слова: <i>«Если ты любишь цветок, который растет где-то на далекой звезде, хорошо ночью смотреть на небо. Все звезды расцветают...»</i>
                 </p>
@@ -498,7 +402,6 @@
                     Я тебя очень сильно люблю! ❤️
                 </p>
             </div>
-
             <div class="mt-6 text-center">
                 <button onclick="closeLoveLetter()" class="w-full bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-semibold py-3 px-6 rounded-2xl shadow-lg hover:brightness-110 active:scale-95 transition duration-300">
                     Сохранить в сердце ✨
@@ -509,9 +412,6 @@
 
     <!-- AUDIO ENGINE & QUEST LOGIC -->
     <script>
-        /* ----------------------------------------------------
-           1. CANVAS SCENE DRAWING (Watercolor Little Prince Artwork)
-           ---------------------------------------------------- */
         const canvas = document.getElementById('spaceCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -520,7 +420,6 @@
         let shootingStars = [];
         let lastShootingStarSpawn = 0;
 
-        // Quest statuses
         const questsCompleted = {
             rose: false,
             prince: false,
@@ -528,7 +427,6 @@
             star: false
         };
 
-        // Hover status for hotspots
         let activeHoverObj = null;
 
         function resizeCanvas() {
@@ -621,7 +519,6 @@
             ctx.lineWidth = 1.5;
             ctx.stroke();
 
-            // Craters
             const craters = [
                 { cx: x - radius * 0.3, cy: y - radius * 0.2, r: radius * 0.22 },
                 { cx: x + radius * 0.2, cy: y + radius * 0.3, r: radius * 0.18 },
@@ -634,7 +531,6 @@
                 ctx.fill();
             });
 
-            // Rose on Moon
             ctx.beginPath();
             ctx.moveTo(x + radius * 0.1, y - radius * 0.95);
             ctx.lineTo(x + radius * 0.15, y - radius * 1.35);
@@ -679,7 +575,6 @@
             ctx.save();
             ctx.translate(planetX, planetY);
 
-            // Asteroid Body
             let planetGrad = ctx.createRadialGradient(0, -planetR * 0.5, planetR * 0.2, 0, 0, planetR);
             planetGrad.addColorStop(0, '#918b76');
             planetGrad.addColorStop(0.5, '#5c584a');
@@ -693,7 +588,6 @@
             ctx.lineWidth = 3;
             ctx.stroke();
 
-            // Craters
             const surfaceCraters = [
                 { x: -planetR * 0.45, y: -planetR * 0.82, r: 28 },
                 { x: -planetR * 0.15, y: -planetR * 0.94, r: 22 },
@@ -708,7 +602,7 @@
 
             const topY = -planetR;
 
-            // 1. Fox (Left side)
+            // 1. Fox
             ctx.save();
             ctx.translate(-28, topY + 4);
             let isFoxGlowing = questsCompleted.fox || activeHoverObj === 'fox';
@@ -716,23 +610,19 @@
                 ctx.shadowColor = '#e85d04';
                 ctx.shadowBlur = 20;
             }
-            // Fox Body
             ctx.beginPath();
             ctx.ellipse(0, -14, 11, 16, -0.1, 0, Math.PI * 2);
             ctx.fillStyle = '#e85d04';
             ctx.fill();
-            // Fox Head & Ears
             ctx.beginPath();
             ctx.arc(0, -30, 9, 0, Math.PI * 2);
             ctx.fillStyle = '#dc2f02';
             ctx.fill();
-            // Ears
             ctx.beginPath();
             ctx.moveTo(-7, -34); ctx.lineTo(-11, -44); ctx.lineTo(-2, -37);
             ctx.moveTo(2, -37); ctx.lineTo(7, -44); ctx.lineTo(8, -34);
             ctx.fillStyle = '#dc2f02';
             ctx.fill();
-            // Tail
             ctx.beginPath();
             ctx.quadraticCurveTo(-25, 0, -22, -22);
             ctx.quadraticCurveTo(-15, -15, -9, -5);
@@ -744,7 +634,7 @@
             ctx.fill();
             ctx.restore();
 
-            // 2. Little Prince (Center)
+            // 2. Little Prince
             ctx.save();
             ctx.translate(10, topY + 6);
             let isPrinceGlowing = questsCompleted.prince || activeHoverObj === 'prince';
@@ -752,28 +642,22 @@
                 ctx.shadowColor = '#ffd166';
                 ctx.shadowBlur = 25;
             }
-            // Coat Back
             ctx.beginPath();
             ctx.ellipse(0, -18, 14, 20, 0, 0, Math.PI * 2);
             ctx.fillStyle = '#2d6a4f';
             ctx.fill();
-            // Belt
             ctx.fillStyle = '#b5838d';
             ctx.fillRect(-12, -15, 24, 4);
-            // Head Back
             ctx.beginPath();
             ctx.arc(0, -42, 13, 0, Math.PI * 2);
             ctx.fillStyle = '#ffb703';
             ctx.fill();
-            // Hair
             ctx.beginPath();
             ctx.arc(-5, -52, 6, 0, Math.PI * 2);
             ctx.arc(4, -54, 7, 0, Math.PI * 2);
             ctx.arc(10, -48, 5, 0, Math.PI * 2);
             ctx.fillStyle = '#ffc300';
             ctx.fill();
-
-            // Yellow Scarf
             ctx.beginPath();
             ctx.moveTo(8, -38);
             ctx.quadraticCurveTo(40, -42, 65, -30);
@@ -782,7 +666,7 @@
             ctx.fill();
             ctx.restore();
 
-            // 3. Red Rose (Right side)
+            // 3. Rose
             ctx.save();
             ctx.translate(65, topY + 4);
             let isRoseGlowing = questsCompleted.rose || activeHoverObj === 'rose';
@@ -790,20 +674,17 @@
                 ctx.shadowColor = '#ff4d6d';
                 ctx.shadowBlur = 25;
             }
-            // Stem
             ctx.beginPath();
             ctx.moveTo(0, 0);
             ctx.quadraticCurveTo(5, -20, 2, -35);
             ctx.strokeStyle = '#40916c';
             ctx.lineWidth = 3;
             ctx.stroke();
-            // Leaves
             ctx.beginPath();
             ctx.ellipse(-6, -18, 7, 3, -0.4, 0, Math.PI * 2);
             ctx.ellipse(8, -24, 7, 3, 0.4, 0, Math.PI * 2);
             ctx.fillStyle = '#52b788';
             ctx.fill();
-            // Rose Flower
             ctx.beginPath();
             ctx.arc(2, -42, 10, 0, Math.PI * 2);
             ctx.fillStyle = '#d62828';
@@ -869,25 +750,20 @@
         function drawSpace(timestamp = 0) {
             drawBackgroundSky();
 
-            // Occasional shooting stars across the main screen.
             if (timestamp - lastShootingStarSpawn > 850 + Math.random() * 950) {
                 spawnShootingStar();
                 lastShootingStarSpawn = timestamp;
             }
             drawShootingStars();
 
-            // Stars
             starList.forEach(s => {
                 s.alpha += s.pulseSpeed;
                 if (s.alpha > 1 || s.alpha < 0.3) s.pulseSpeed = -s.pulseSpeed;
                 draw5PointStar(s.x, s.y, 5, s.size, s.size * 0.45, '#f9d75c', Math.abs(s.alpha));
             });
 
-            // Moon & Saturn
             drawCrateredMoon(width * 0.22, height * 0.16, Math.min(width, height) * 0.13);
             drawSaturnPlanet(width * 0.82, height * 0.12, Math.min(width, height) * 0.07);
-
-            // Asteroid & Characters
             drawMainPlanetAndCharacters();
 
             requestAnimationFrame(drawSpace);
@@ -901,9 +777,6 @@
 
             if (!moonH || !foxH || !princeH || !roseH || !canvas) return;
 
-            // Hotspots are fixed to the viewport, while the canvas may be
-            // resized or scaled by the browser. Use its real on-screen rect
-            // so clickable areas stay aligned with the artwork.
             const rect = canvas.getBoundingClientRect();
             const scaleX = rect.width / width;
             const scaleY = rect.height / height;
@@ -915,34 +788,18 @@
                 el.style.height = (h * scaleY) + 'px';
             };
 
-            // Moon: circular target matching the visible moon.
             const moonR = Math.min(width, height) * 0.13;
-            placeHotspot(
-                moonH,
-                width * 0.22,
-                height * 0.16,
-                moonR * 2,
-                moonR * 2
-            );
+            placeHotspot(moonH, width * 0.22, height * 0.16, moonR * 2, moonR * 2);
 
-            // Character positions use the same geometry as
-            // drawMainPlanetAndCharacters(). The smaller hit areas avoid
-            // overlapping the neighboring characters.
             const planetR = Math.min(width, height) * 0.65;
             const planetX = width / 2;
             const topY = height + planetR * 0.68 - planetR;
 
-            // Fox body and head.
             placeHotspot(foxH, planetX - 28, topY - 18, 48, 58);
-
-            // Little Prince body and head.
             placeHotspot(princeH, planetX + 10, topY - 26, 48, 68);
-
-            // Rose flower and stem.
             placeHotspot(roseH, planetX + 65, topY - 20, 38, 56);
         }
 
-        // Add mouse/touch hover listeners for canvas elements
         ['star', 'fox', 'prince', 'rose'].forEach(id => {
             const el = document.getElementById('hotspot-' + id);
             if (el) {
@@ -953,9 +810,6 @@
             }
         });
 
-        /* ----------------------------------------------------
-           2. QUEST GAME LOGIC & MODALS
-           ---------------------------------------------------- */
         function openQuest(type) {
             playTone(440, 0.1);
             document.getElementById(`modal-${type}`).classList.remove('hidden');
@@ -975,13 +829,6 @@
             if (hotspot) hotspot.classList.add('quest-complete');
             closeQuest(type);
 
-            // Update badge UI
-            const badge = document.getElementById(`badge-${type}`);
-            if (badge) {
-                badge.className = 'w-7 h-7 rounded-full glass-panel flex items-center justify-center text-amber-300 border-amber-300 shadow-lg shadow-amber-400/30 text-xs font-bold';
-            }
-
-            // Check if all 4 done
             if (questsCompleted.rose && questsCompleted.prince && questsCompleted.fox && questsCompleted.star) {
                 setTimeout(() => {
                     document.getElementById('introHint').classList.add('hidden');
@@ -992,7 +839,6 @@
             }
         }
 
-        // Quest 1: Rose Shield
         let roseClicks = 0;
         function shieldRose() {
             roseClicks++;
@@ -1009,7 +855,6 @@
             }
         }
 
-        // Quest 2: Prince Stars Catching
         let princeCaught = 0;
         function startPrinceQuest() {
             princeCaught = 0;
@@ -1017,7 +862,6 @@
             document.getElementById('princeStatus').innerText = 'Собрано звёзд: 0/5';
             const area = document.getElementById('starCatchArea');
             area.querySelectorAll('.falling-star').forEach(e => e.remove());
-
             spawnStar();
         }
 
@@ -1048,7 +892,6 @@
             area.appendChild(star);
         }
 
-        // Quest 3: Fox Constellation
         let foxStep = 1;
         const constPoints = [
             {x: 20, y: 70},
@@ -1103,7 +946,6 @@
             }
         }
 
-        // Quest 4: Moon Quiz
         function answerStar(isCorrect) {
             if (isCorrect) {
                 playTone(783.99, 0.2);
@@ -1114,7 +956,6 @@
             }
         }
 
-        // Final Love Letter
         function openLoveLetter() {
             playTone(523.25, 0.3);
             document.getElementById('modal-letter').classList.remove('hidden');
@@ -1125,25 +966,8 @@
             document.getElementById('modal-letter').classList.add('hidden');
         }
 
-        /* ----------------------------------------------------
-           3. AUDIO SYNTHESIZER & CUSTOM MP3 SUPPORT
-           ---------------------------------------------------- */
-        
-        /* 
-           ==================================================================
-           🎵 КАК ПОСТАВИТЬ СВОЮ МУЗЫКУ (например, песню custom_music.mp3):
-           ==================================================================
-           1. Положите ваш аудиофайл (mp3) в ту же папку, где лежит этот index.html.
-           2. Раскомментируйте строчку ниже (уберите //):
-            const myAudio = new Audio('custom_music.mp3'); myAudio.loop = true;
-           3. В функции toggleAudio() ниже замените вызов startAmbientMusic() 
-              на myAudio.play(), а ambientOsc.stop() на myAudio.pause().
-           ==================================================================
-        */
-
         let audioCtx = null;
         let isAudioPlaying = false;
-        let ambientOsc = null;
 
         function initAudio() {
             if (!audioCtx) {
@@ -1190,15 +1014,6 @@
             }
         }
 
-        function startAmbientMusic() {
-            if (!isAudioPlaying) return;
-            const notes = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25];
-            const randomNote = notes[Math.floor(Math.random() * notes.length)];
-            playTone(randomNote, 2.5);
-            setTimeout(startAmbientMusic, 1800);
-        }
-
-        // Initialization
         window.addEventListener('resize', resizeCanvas);
         window.addEventListener('orientationchange', () => {
             setTimeout(resizeCanvas, 180);
